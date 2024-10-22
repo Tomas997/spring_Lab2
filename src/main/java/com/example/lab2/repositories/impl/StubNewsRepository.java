@@ -20,6 +20,8 @@ public class StubNewsRepository implements NewsRepository {
             new News(3L, "Технології", "Новинки в світі технологій", NewsCategory.TECHNOLOGY, LocalDate.parse("2024-10-18"))
     ));
 
+    private long nextId = 4L; // Лічильник для наступного ID
+
     @Override
     public List<News> getAllNews() {
         return newsList;
@@ -51,6 +53,9 @@ public class StubNewsRepository implements NewsRepository {
 
     @Override
     public void addNews(News news) {
+        // Встановлюємо унікальний ID для нової новини
+        news.setId(nextId);
+        nextId++; // Збільшуємо лічильник для наступного ID
         newsList.add(news);
     }
 
@@ -59,10 +64,10 @@ public class StubNewsRepository implements NewsRepository {
         for (int i = 0; i < newsList.size(); i++) {
             News news = newsList.get(i);
             if (news.getId().equals(id)) {
-                newsList.set(i, updatedNews); // Replace the old news with the updated news
+                newsList.set(i, updatedNews); // Заміна старої новини новою
                 return;
             }
         }
-
     }
 }
+
