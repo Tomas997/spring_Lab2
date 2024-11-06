@@ -2,11 +2,8 @@ package com.example.lab2.models;
 
 
 import lombok.*;
-
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
+
 
 @Data
 @Builder

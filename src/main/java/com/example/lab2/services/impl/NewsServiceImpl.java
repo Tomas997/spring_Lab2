@@ -24,31 +24,18 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     public Optional<List<News>> getAllNewsByCategory(NewsCategory category) {
-
         return newsRepository.getAllNewsByCategory(category);
     }
 
+
+
     @Override
-    public void deleteNewsById(Long id) {
-        newsRepository.deleteNewsById(id);
+    public void createNews(News news) {
+        newsRepository.createNews(news);
     }
 
     @Override
-    public Optional<News> getNewsById(Long id) {
-        return newsRepository.getAllNews().stream()
-                .filter(news -> news.getId().equals(id))
-                .findFirst();
-    }
-
-    @Override
-    public void addNews(News news) {
-        newsRepository.addNews(news);
-    }
-
-    @Override
-    public void updateNews(Long id, News updatedNews) {
-        // Ensure the ID of the updatedNews matches the ID being updated
-        updatedNews.setId(id); // Assuming setId exists in News
-        newsRepository.updateNews(id, updatedNews);
+    public Optional<List<News>> getAllNews() {
+        return newsRepository.getAllNews();
     }
 }

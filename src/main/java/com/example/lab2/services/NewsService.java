@@ -7,16 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface NewsService {
+    Optional<List<News>> getAllNews();
 
     Optional<List<News>> getAllNewsByWord(String keywords);
 
     Optional<List<News>> getAllNewsByCategory(NewsCategory category);
 
-    void deleteNewsById(Long id);
 
-    Optional<News> getNewsById(Long id);
+    void createNews(News news);
 
-    void addNews(News news);
 
-    void updateNews(Long id, News updatedNews);
 }

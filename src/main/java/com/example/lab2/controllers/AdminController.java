@@ -2,7 +2,7 @@ package com.example.lab2.controllers;
 
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
-import com.example.lab2.repositories.NewsRepository;
+import com.example.lab2.services.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,21 +17,23 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
-    private NewsRepository newsRepository;
+    private final NewsService newsService;
+
     @GetMapping("/create_news")
     public String getCreateNewsForm(Model model) {
-        model.addAttribute("categories", NewsCategory.values()); // Pass categories to the model
-        return "newsForm"; // Return the name of the Thymeleaf template without 'templates/'
+        model.addAttribute("categories", NewsCategory.values());
+        LocalDate currentDate  = LocalDate.now();
+        model.addAttribute("currentDate", currentDate.toString());
+        return "newsForm";
     }
+
     @PostMapping("/create_news")
     public String createNews(
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("category") NewsCategory category,
-            @RequestParam("date") String date,
-            Model model) {
-
-        // Створюємо об'єкт новини
+            @RequestParam("date") String date
+    ) {
         News news = News.builder()
                 .title(title)
                 .content(content)
@@ -39,11 +41,7 @@ public class AdminController {
                 .date(LocalDate.parse(date))
                 .build();
 
-        // Додаємо новину в репозиторій
-        newsRepository.addNews(news);
-
-        // Перенаправляємо на сторінку зі списком новин
+        newsService.createNews(news);
         return "redirect:/admin/create_news";
     }
-
 }
