@@ -8,6 +8,7 @@ import com.example.lab2.services.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,30 +49,44 @@ public class NewsServiceImpl implements NewsService {
     @Override
     public Map<NewsCategory, String> getNewsCategoryStatus() {
         // Отримуємо список новин
-        List<News> newsList = newsRepository.getAllNews().orElseThrow(() -> new IllegalStateException("No news found"));
+        List<News> newsList = newsRepository.getAllNews()
+                .orElseThrow(() -> new IllegalStateException("No news found"));
 
-        // Групуємо за категорією та визначаємо статус для кожної категорії
+        // Групуємо новини за категоріями та рахуємо кількість публікацій для кожної категорії
         Map<NewsCategory, Integer> categoryCounts = newsList.stream()
                 .collect(Collectors.groupingBy(
                         News::getCategory,
                         Collectors.summingInt(news -> 1)
                 ));
 
+        double averageCount = categoryCounts.values().stream()
+                .mapToInt(count -> count)
+                .average()
+                .orElse(0);
+        int maxCount = categoryCounts.values().stream()
+                .mapToInt(count -> count)
+                .max()
+                .orElse(0);
+
         // Встановлюємо статуси для кожної категорії
-        return categoryCounts.entrySet().stream()
+        return Arrays.stream(NewsCategory.values())
                 .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> {
-                            int count = entry.getValue();
-                            if (count < 5) {
-                                return "low";
-                            } else if (count <= 10) {
-                                return "medium";
+                        category -> category,
+                        category -> {
+                            int count = categoryCounts.getOrDefault(category, 0);
+                            if (count == 0) {
+                                return "no"; // Немає новин
+                            } else if (count < averageCount) {
+                                return "low"; // Менше середнього
+                            } else if (count < maxCount) {
+                                return "medium"; // Між середнім і максимумом
                             } else {
-                                return "high";
+                                return "high"; // Максимальне значення
                             }
                         }
                 ));
     }
+
+
 
 }
