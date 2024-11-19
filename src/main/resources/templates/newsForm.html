@@ -131,17 +131,25 @@
         <h2>Category Statistics</h2>
         <div class="columns">
             <ul class="categories">
-                <li th:each="category : ${categories}" th:text="${category.displayName}"></li>
+                <li th:each="entry : ${countOfCategoryNews}" th:text="${entry.key.displayName}"></li>
             </ul>
             <ul class="counts">
-                <li>1</li>
+                <li th:each="entry : ${countOfCategoryNews}" th:text="${entry.value}"></li>
             </ul>
             <ul class="counts">
-                <li>=)</li>
+                <li th:each="entry : ${newsCategoryStatus}" th:switch="${entry.value}">
+                    <span th:case="'low'">🔴</span>
+                    <span th:case="'medium'">🟡</span>
+                    <span th:case="'high'">🟢</span>
+                </li>
             </ul>
         </div>
     </div>
 </div>
+
+
+
+
 
 
 

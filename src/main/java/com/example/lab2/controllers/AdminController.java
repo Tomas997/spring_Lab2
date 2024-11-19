@@ -24,6 +24,8 @@ public class AdminController {
         model.addAttribute("categories", NewsCategory.values());
         LocalDate currentDate  = LocalDate.now();
         model.addAttribute("currentDate", currentDate.toString());
+        model.addAttribute("countOfCategoryNews",newsService.getNewsCountByCategory());
+        model.addAttribute("newsCategoryStatus", newsService.getNewsCategoryStatus());
         return "newsForm";
     }
 
