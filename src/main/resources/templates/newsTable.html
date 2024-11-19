@@ -1,54 +1,96 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>News Table</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>News Table</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Задаємо ширину для стовпців */
+        .table thead th:nth-child(1), /* ID */
+        .table tbody td:nth-child(1) {
+            width: 5%; /* Вузький стовпець для ID */
+        }
+
+        .table thead th:nth-child(3), /* Content */
+        .table tbody td:nth-child(3) {
+            width: 50%; /* Широкий стовпець для опису */
+        }
+
+        .table thead th:nth-child(2), /* Title */
+        .table tbody td:nth-child(2),
+        .table thead th:nth-child(4), /* Category */
+        .table tbody td:nth-child(4),
+        .table thead th:nth-child(5), /* Date */
+        .table tbody td:nth-child(5) {
+            width: auto; /* Залишковий простір для інших */
+        }
+    </style>
 </head>
 <body>
 
+
 <div class="container">
-  <div class="d-flex justify-content-between align-items-center  mb-4 mt-2">
-    <h1>News List</h1>
-    <!-- Пошукова форма справа -->
-    <form action="/user/news/search" method="get" class="form-inline">
-      <input type="text" name="keyword" class="form-control mr-2" placeholder="Enter keyword" required>
-      <button type="submit" class="btn btn-primary">Search</button>
-    </form>
-  </div>
+    <div class="d-flex justify-content-between align-items-center  mb-4 mt-2">
+        <h1>News List</h1>
+        <!-- Пошукова форма справа -->
+        <form action="/user/news/search" method="get" class="form-inline">
+            <input type="text" name="keyword" class="form-control mr-2" placeholder="Enter keyword" required>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
 
-  <!-- Кнопки для вибору категорій, розтягнуті на всю ширину -->
-  <div class="btn-group btn-group-justified d-flex mb-3" role="group">
-    <a href="/user/news" class="btn btn-secondary flex-fill">All</a>
-    <a href="/user/news/category?category=SPORTS" class="btn btn-secondary flex-fill">Sports</a>
-    <a href="/user/news/category?category=POLITICS" class="btn btn-secondary flex-fill">Politics</a>
-    <a href="/user/news/category?category=TECHNOLOGY" class="btn btn-secondary flex-fill">Technology</a>
-    <a href="/user/news/category?category=HEALTH" class="btn btn-secondary flex-fill">Health</a>
-    <a href="/user/news/category?category=ENTERTAINMENT" class="btn btn-secondary flex-fill">Entertainment</a>
-    <a href="/user/news/category?category=BUSINESS" class="btn btn-secondary flex-fill">Business</a>
-    <a href="/user/news/category?category=SCIENCE" class="btn btn-secondary flex-fill">Science</a>
-  </div>
+    <div class="btn-group btn-group-justified d-flex mb-3" role="group">
+        <a href="/user/news"
+           class="btn flex-fill"
+           th:classappend="${category == null} ? 'btn-primary' : 'btn-secondary'">All</a>
+        <a href="/user/news/category?category=SPORTS"
+           class="btn flex-fill"
+           th:classappend="${category == 'SPORTS'} ? 'btn-primary' : 'btn-secondary'">Sports</a>
+        <a href="/user/news/category?category=POLITICS"
+           class="btn flex-fill"
+           th:classappend="${category == 'POLITICS'} ? 'btn-primary' : 'btn-secondary'">Politics</a>
+        <a href="/user/news/category?category=TECHNOLOGY"
+           class="btn flex-fill"
+           th:classappend="${category == 'TECHNOLOGY'} ? 'btn-primary' : 'btn-secondary'">Technology</a>
+        <a href="/user/news/category?category=HEALTH"
+           class="btn flex-fill"
+           th:classappend="${category == 'HEALTH'} ? 'btn-primary' : 'btn-secondary'">Health</a>
+        <a href="/user/news/category?category=ENTERTAINMENT"
+           class="btn flex-fill"
+           th:classappend="${category == 'ENTERTAINMENT'} ? 'btn-primary' : 'btn-secondary'">Entertainment</a>
+        <a href="/user/news/category?category=BUSINESS"
+           class="btn flex-fill"
+           th:classappend="${category == 'BUSINESS'} ? 'btn-primary' : 'btn-secondary'">Business</a>
+        <a href="/user/news/category?category=SCIENCE"
+           class="btn flex-fill"
+           th:classappend="${category == 'SCIENCE'} ? 'btn-primary' : 'btn-secondary'">Science</a>
+    </div>
 
-  <!-- Таблиця новин -->
-  <table class="table table-striped mt-20">
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>Title</th>
-      <th>Content</th>
-      <th>Category</th>
-      <th>Date</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="news : ${newsList}">
-      <td th:text="${news.id}">1</td>
-      <td th:text="${news.title}">News Title</td>
-      <td th:text="${news.content}">News Content</td>
-      <td th:text="${news.category.getDisplayName()}">Category</td>
-      <td th:text="${news.date}">2024-10-22</td>
-    </tr>
-    </tbody>
-  </table>
+    <div style="min-height: 200px;">
+        <table class="table table-striped mt-20">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Category</th>
+                <th>Date</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(newsList)}">
+                <td colspan="5" class="text-center">Відсутні новини цієї категорії</td>
+            </tr>
+            <tr th:each="news : ${newsList}">
+                <td th:text="${news.id}">1</td>
+                <td th:text="${news.title}">News Title</td>
+                <td th:text="${news.content}">News Content</td>
+                <td th:text="${news.category.getDisplayName()}">Category</td>
+                <td th:text="${news.date}">2024-10-22</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
 </div>
 
 </body>
