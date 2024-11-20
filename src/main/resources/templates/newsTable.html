@@ -3,29 +3,56 @@
 <head>
     <title>News Table</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* Задаємо ширину для стовпців */
-        .table thead th:nth-child(1), /* ID */
-        .table tbody td:nth-child(1) {
-            width: 5%; /* Вузький стовпець для ID */
-        }
+  <style>
+    .table {
+        table-layout: fixed;
+        width: 100%;
+    }
 
-        .table thead th:nth-child(3), /* Content */
-        .table tbody td:nth-child(3) {
-            width: 50%; /* Широкий стовпець для опису */
-        }
+    /* Фіксована ширина стовпців */
+    .table thead th:nth-child(1), /* ID */
+    .table tbody td:nth-child(1) {
+        width: 5%;
+    }
 
-        .table thead th:nth-child(2), /* Title */
-        .table tbody td:nth-child(2),
-        .table thead th:nth-child(4), /* Category */
-        .table tbody td:nth-child(4),
-        .table thead th:nth-child(5), /* Date */
-        .table tbody td:nth-child(5) {
-            width: auto; /* Залишковий простір для інших */
-        }
-    </style>
+    .table thead th:nth-child(3), /* Content */
+    .table tbody td:nth-child(3) {
+        width: 50%;
+    }
+
+    .table thead th:nth-child(2), /* Title */
+    .table tbody td:nth-child(2),
+    .table thead th:nth-child(4), /* Category */
+    .table tbody td:nth-child(4),
+    .table thead th:nth-child(5), /* Date */
+    .table tbody td:nth-child(5) {
+        width: 15%;
+    }
+
+    .table tbody td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer; /* Додаємо курсор для взаємодії */
+    }
+
+    /* Розширений текст */
+    .truncate.expanded {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: unset;
+    }
+  </style>
 </head>
 <body>
+
+
 
 
 <div class="container">
@@ -92,6 +119,18 @@
     </div>
 
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+      const cells = document.querySelectorAll('table tbody tr td:nth-child(3)');
+      cells.forEach(cell => {
+          cell.classList.add('truncate');
+          cell.addEventListener('click', () => {
+              cell.classList.toggle('expanded');
+          });
+      });
+  });
+</script>
 
 </body>
 </html>
