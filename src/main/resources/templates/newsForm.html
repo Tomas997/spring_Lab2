@@ -11,8 +11,8 @@
         .columns {
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
-        gap: 10px;
-        text-align: left;
+        gap: 5px;
+        text-align: center;
         }
 
         ul {
@@ -24,6 +24,19 @@
         li {
             padding: 5px 5px;
             margin-bottom: 5px;
+        }
+
+        .circle {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .circle li {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3.1px 3.1px;
         }
 
         form {
@@ -131,17 +144,26 @@
         <h2>Category Statistics</h2>
         <div class="columns">
             <ul class="categories">
-                <li th:each="category : ${categories}" th:text="${category.displayName}"></li>
+                <li th:each="entry : ${countOfCategoryNews}" th:text="${entry.key.displayName}"></li>
             </ul>
             <ul class="counts">
-                <li>1</li>
+                <li th:each="entry : ${countOfCategoryNews}" th:text="${entry.value}"></li>
             </ul>
-            <ul class="counts">
-                <li>=)</li>
+            <ul class="circle">
+                <li th:each="entry : ${newsCategoryStatus}" th:switch="${entry.value}">
+                    <span th:case="'no'">⚪</span>
+                    <span th:case="'low'">🔴</span>
+                    <span th:case="'medium'">🟡</span>
+                    <span th:case="'high'">🟢</span>
+                </li>
             </ul>
         </div>
     </div>
 </div>
+
+
+
+
 
 
 

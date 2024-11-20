@@ -4,6 +4,7 @@ import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface NewsService {
@@ -13,6 +14,9 @@ public interface NewsService {
 
     Optional<List<News>> getAllNewsByCategory(NewsCategory category);
 
+    Map<NewsCategory, Integer> getNewsCountByCategory();
+
+    Map<NewsCategory, String> getNewsCategoryStatus();
 
     void createNews(News news);
 
