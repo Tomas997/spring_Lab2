@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.time.LocalDate;
 
@@ -34,13 +35,16 @@ public class AdminController {
             @RequestParam("title") String title,
             @RequestParam("content") String content,
             @RequestParam("category") NewsCategory category,
-            @RequestParam("date") String date
+            @RequestParam("date") LocalDate date
     ) {
+        String safeTitle = StringEscapeUtils.escapeHtml4(title);        //Фільтрація символів: скрипти видаляються з полів, наприклад, бібліотеку Apache Commons Lang
+        String safeContent = StringEscapeUtils.escapeHtml4(content);
+
         News news = News.builder()
-                .title(title)
-                .content(content)
+                .title(safeTitle)
+                .content(safeContent)
                 .category(category)
-                .date(LocalDate.parse(date))
+                .date(date)
                 .build();
 
         newsService.createNews(news);
