@@ -104,9 +104,26 @@
             cursor: pointer;
             float: right;
         }
+
+        .top-right-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .top-right-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
+<a href="/admin/news_table_admin"><button class="top-right-button">Go to news table</button></a>
 <h1>Create News</h1>
 <form action="/admin/create_news" method="post">
 
