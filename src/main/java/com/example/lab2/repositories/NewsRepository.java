@@ -10,10 +10,16 @@ import java.util.Optional;
 
 public interface NewsRepository {
     Optional<List<News>> getAllNews();
+
     Optional<List<News>> getAllNewsByCategory(NewsCategory category);
+
     Optional<List<News>> getAllNewsByWord(String word);
+
     Map<NewsCategory, Integer> getNewsCountByCategory();
-    void createNews(News news);
 
+    News createNews(News news);
 
+    boolean deleteNewsById(Long id);
+
+    Optional<News> updateNews(Long id, News updatedNews);
 }

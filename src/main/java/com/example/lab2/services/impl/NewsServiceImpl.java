@@ -4,14 +4,12 @@ package com.example.lab2.services.impl;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 import com.example.lab2.repositories.NewsRepository;
+import com.example.lab2.services.NewsNotFoundException;
 import com.example.lab2.services.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,20 +35,28 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Override
-    public void createNews(News news) {
-        newsRepository.createNews(news);
+    public News createNews(News news) {
+        return newsRepository.createNews(news);
     }
 
     @Override
     public Optional<List<News>> getAllNews() {
         return newsRepository.getAllNews();
     }
+    @Override
+    public Optional<News> getNewsById(Long id) {
+        return newsRepository.getAllNews()
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(news -> news.getId().equals(id))
+                .findFirst();
+    }
 
     @Override
     public Map<NewsCategory, String> getNewsCategoryStatus() {
         // Отримуємо список новин
         List<News> newsList = newsRepository.getAllNews()
-                .orElseThrow(() -> new IllegalStateException("No news found"));
+                .orElseThrow(NewsNotFoundException::new);
 
         // Групуємо новини за категоріями та рахуємо кількість публікацій для кожної категорії
         Map<NewsCategory, Integer> categoryCounts = newsList.stream()
@@ -87,6 +93,22 @@ public class NewsServiceImpl implements NewsService {
                 ));
     }
 
+    @Override
+    public News updateNews(Long id, News updatedNews) {
+        Optional<News> updated = newsRepository.updateNews(id, updatedNews);
+        if (updated.isEmpty()) {
+            throw new NewsNotFoundException(id);
+        }
+        return updated.get();
+    }
 
+    @Override
+    public void deleteNews(Long id) {
+        boolean removed = newsRepository.deleteNewsById(id);
+        if (!removed) {
+            throw new NewsNotFoundException(id);
+        }
+    }
 
 }
+
