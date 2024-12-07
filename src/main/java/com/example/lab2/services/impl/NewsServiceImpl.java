@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -108,6 +109,26 @@ public class NewsServiceImpl implements NewsService {
         if (!removed) {
             throw new NewsNotFoundException(id);
         }
+    }
+
+    @Override
+    public Optional<List<News>> getNewsWithPaginationAndFiltering(String keywords, NewsCategory category, int page, int size) {
+        return newsRepository.getAllNews().map(newsList -> {
+            Stream<News> stream = newsList.stream();
+
+            if (keywords != null && !keywords.isEmpty()) {
+                stream = stream.filter(news -> news.getTitle().contains(keywords) || news.getContent().contains(keywords));
+            }
+
+            if (category != null) {
+                stream = stream.filter(news -> news.getCategory() == category);
+            }
+
+            return stream
+                    .skip((long) page * size)
+                    .limit(size)
+                    .toList();
+        });
     }
 
 }

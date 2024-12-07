@@ -90,7 +90,6 @@
         <a href="/admin/news/category?category=SCIENCE" class="btn flex-fill" th:classappend="${category == 'SCIENCE'} ? 'btn-primary' : 'btn-secondary'">Science</a>
     </div>
 
-    <!-- Таблиця новин -->
     <div style="min-height: 200px;">
         <table class="table table-striped">
             <thead>
@@ -105,7 +104,7 @@
             </thead>
             <tbody>
             <tr th:if="${#lists.isEmpty(newsList)}">
-                <td colspan="6" class="text-center">No news available for this category</td>
+                <td colspan="6" class="text-center">No news available</td>
             </tr>
             <tr th:each="news : ${newsList}">
                 <td th:text="${news.id}">1</td>
@@ -124,7 +123,24 @@
             </tbody>
         </table>
     </div>
-</div>
+
+    <!-- Пагінація -->
+
+    <nav th:if="${!#lists.isEmpty(newsList)}">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/news(page=${currentPage - 1}, size=5)}">Previous</a>
+            </li>
+            <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${i == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/admin/news(page=${i}, size=5)}" th:text="${i + 1}">1</a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/admin/news(page=${currentPage + 1}, size=5)}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {

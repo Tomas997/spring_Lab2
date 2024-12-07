@@ -25,4 +25,6 @@ public interface NewsService {
     News updateNews(Long id, News updatedNews);
 
     void deleteNews(Long id);
+
+    Optional<List<News>> getNewsWithPaginationAndFiltering(String keywords, NewsCategory category, int page, int size);
 }
