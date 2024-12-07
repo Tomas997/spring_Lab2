@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>News Table</title>
+    <!-- Підключення Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <style>
+        /* Стилі таблиці */
+        .table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        .table thead th:nth-child(1), /* ID */
+        .table tbody td:nth-child(1) {
+            width: 5%;
+        }
+
+        .table thead th:nth-child(3), /* Content */
+        .table tbody td:nth-child(3) {
+            width: 50%;
+        }
+
+        .table thead th:nth-child(2), /* Title */
+        .table tbody td:nth-child(2),
+        .table thead th:nth-child(4), /* Category */
+        .table tbody td:nth-child(4),
+        .table thead th:nth-child(5), /* Date */
+        .table tbody td:nth-child(5) {
+            width: 15%;
+        }
+
+        .table tbody td {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Фіксування ширини стовпця дій */
+        .table thead th:nth-child(6),
+        .table tbody td:nth-child(6) {
+            width: 20%;
+            overflow: visible;
+        }
+
+        /* Стилі кнопок */
+        .action-buttons {
+            display: flex;
+            gap: 5px; /* Відступ між кнопками */
+        }
+
+        .truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .truncate.expanded {
+            white-space: normal;
+            overflow: visible;
+            text-overflow: unset;
+        }
+        .form-inline{
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Заголовок і форма пошуку -->
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
+        <h1>News List</h1>
+        <form action="/admin/news/search" method="get" class="form-inline">
+            <input type="text" name="keyword" class="form-control mr-2" placeholder="Enter keyword" required>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <!-- Кнопки категорій -->
+    <div class="btn-group btn-group-justified d-flex mb-3" role="group">
+        <a href="/admin/news" class="btn flex-fill" th:classappend="${category == null} ? 'btn-primary' : 'btn-secondary'">All</a>
+        <a href="/admin/news/category?category=SPORTS" class="btn flex-fill" th:classappend="${category == 'SPORTS'} ? 'btn-primary' : 'btn-secondary'">Sports</a>
+        <a href="/admin/news/category?category=POLITICS" class="btn flex-fill" th:classappend="${category == 'POLITICS'} ? 'btn-primary' : 'btn-secondary'">Politics</a>
+        <a href="/admin/news/category?category=TECHNOLOGY" class="btn flex-fill" th:classappend="${category == 'TECHNOLOGY'} ? 'btn-primary' : 'btn-secondary'">Technology</a>
+        <a href="/admin/news/category?category=HEALTH" class="btn flex-fill" th:classappend="${category == 'HEALTH'} ? 'btn-primary' : 'btn-secondary'">Health</a>
+        <a href="/admin/news/category?category=ENTERTAINMENT" class="btn flex-fill" th:classappend="${category == 'ENTERTAINMENT'} ? 'btn-primary' : 'btn-secondary'">Entertainment</a>
+        <a href="/admin/news/category?category=BUSINESS" class="btn flex-fill" th:classappend="${category == 'BUSINESS'} ? 'btn-primary' : 'btn-secondary'">Business</a>
+        <a href="/admin/news/category?category=SCIENCE" class="btn flex-fill" th:classappend="${category == 'SCIENCE'} ? 'btn-primary' : 'btn-secondary'">Science</a>
+    </div>
+
+    <!-- Таблиця новин -->
+    <div style="min-height: 200px;">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(newsList)}">
+                <td colspan="6" class="text-center">No news available for this category</td>
+            </tr>
+            <tr th:each="news : ${newsList}">
+                <td th:text="${news.id}">1</td>
+                <td th:text="${news.title}">News Title</td>
+                <td th:text="${news.content}" class="truncate">News Content</td>
+                <td th:text="${news.category.getDisplayName()}">Category</td>
+                <td th:text="${news.date}">2024-10-22</td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn btn-warning btn-sm" onclick="editNews(this)">✐</button>
+                        <button class="btn btn-success btn-sm" onclick="saveNews(this)">Save</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteNews(this)">Delete</button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Додаємо взаємодію з полями "Content"
+        const cells = document.querySelectorAll('.truncate');
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+                cell.classList.toggle('expanded');
+            });
+        });
+    });
+
+
+    function editNews(button) {
+        const row = button.closest('tr');
+        row.querySelectorAll('td').forEach((cell, index) => {
+            if (index > 0 && index < 5 && !cell.querySelector('input')) {
+                const text = cell.innerText.trim();
+                cell.innerHTML = `<input type="text" class="form-control" value="${text}">`;
+            }
+        });
+    }
+
+    function saveNews(button) {
+        const row = button.closest('tr');
+        row.querySelectorAll('td').forEach((cell, index) => {
+            if (cell.querySelector('input')) {
+                const input = cell.querySelector('input');
+                cell.innerHTML = input.value;
+            }
+        });
+        alert('Changes saved!');
+    }
+
+    function deleteNews(button) {
+        const row = button.closest('tr');
+        row.remove();
+        alert('News deleted.');
+    }
+</script>
+</body>
+</html>
