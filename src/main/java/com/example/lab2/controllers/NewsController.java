@@ -18,9 +18,9 @@ public class NewsController {
     private final NewsService newsService;
 
     @PostMapping
-    public ResponseEntity<String> createNews(@RequestBody News news) {
-        newsService.createNews(news);
-        return ResponseEntity.status(HttpStatus.CREATED).body("News created successfully.");
+    public ResponseEntity<News> createNews(@RequestBody News news) {
+        News newsCreated = newsService.createNews(news);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsCreated);
     }
 
     @GetMapping

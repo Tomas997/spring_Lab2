@@ -35,8 +35,8 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Override
-    public void createNews(News news) {
-        newsRepository.createNews(news);
+    public News createNews(News news) {
+        return newsRepository.createNews(news);
     }
 
     @Override

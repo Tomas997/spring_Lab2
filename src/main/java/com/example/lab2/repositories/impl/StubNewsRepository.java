@@ -93,10 +93,11 @@ public class StubNewsRepository implements NewsRepository {
 
 
     @Override
-    public void createNews(News news) {
+    public News createNews(News news) {
         news.setId(nextId);
         nextId++;
         newsList.add(news);
+        return news;
     }
 
 

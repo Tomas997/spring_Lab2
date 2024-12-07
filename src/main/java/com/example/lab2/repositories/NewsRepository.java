@@ -17,7 +17,7 @@ public interface NewsRepository {
 
     Map<NewsCategory, Integer> getNewsCountByCategory();
 
-    void createNews(News news);
+    News createNews(News news);
 
     boolean deleteNewsById(Long id);
 

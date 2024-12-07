@@ -20,7 +20,7 @@ public interface NewsService {
 
     Map<NewsCategory, String> getNewsCategoryStatus();
 
-    void createNews(News news);
+    News createNews(News news);
 
     News updateNews(Long id, News updatedNews);
 
