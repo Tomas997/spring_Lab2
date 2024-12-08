@@ -19,25 +19,28 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
     private final NewsService newsService;
+    private static final String NEWS_LIST = "newsList";
+    private static final String NEWS_TABLE = "newsTable";
 
     @GetMapping("/news")
     public String getAllNews(Model model) {
         Optional<List<News>> newsListOpt = newsService.getAllNews();
-        model.addAttribute("newsList", newsListOpt.orElse(List.of()));
-        return "newsTable";
+        model.addAttribute(NEWS_LIST, newsListOpt.orElse(List.of()));
+        return NEWS_TABLE;
     }
 
     @GetMapping("/news/category")
     public String getNewsByCategory(@RequestParam("category") NewsCategory category, Model model) {
         Optional<List<News>> newsListOpt = newsService.getAllNewsByCategory(category);
-        model.addAttribute("newsList", newsListOpt.orElse(List.of()));
-        return "newsTable";
+        model.addAttribute(NEWS_LIST, newsListOpt.orElse(List.of()));
+        model.addAttribute("category", String.valueOf(category));
+        return NEWS_TABLE;
     }
 
     @GetMapping("/news/search")
     public String searchNews(@RequestParam("keyword") String keyword, Model model) {
         Optional<List<News>> newsListOpt = newsService.getAllNewsByWord(keyword);
-        model.addAttribute("newsList", newsListOpt.orElse(List.of()));
-        return "newsTable";
+        model.addAttribute(NEWS_LIST, newsListOpt.orElse(List.of()));
+        return NEWS_TABLE;
     }
 }

@@ -6,10 +6,8 @@ import com.example.lab2.repositories.NewsRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class StubNewsRepository implements NewsRepository {
@@ -44,6 +42,24 @@ public class StubNewsRepository implements NewsRepository {
 
         return filteredNews.isEmpty() ? Optional.empty() : Optional.of(filteredNews);
     }
+
+    @Override
+    public Map<NewsCategory, Integer> getNewsCountByCategory() {
+        // Ініціалізація мапи з усіма категоріями та дефолтними значеннями 0
+        Map<NewsCategory, Integer> categoryCountMap = Arrays.stream(NewsCategory.values())
+                .collect(Collectors.toMap(category -> category, category -> 0));
+
+        // Підрахунок новин для кожної категорії
+        newsList.stream()
+                .collect(Collectors.groupingBy(
+                        News::getCategory,
+                        Collectors.summingInt(news -> 1)
+                ))
+                .forEach(categoryCountMap::put);
+
+        return categoryCountMap;
+    }
+
 
 
     @Override

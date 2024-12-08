@@ -7,6 +7,38 @@
         body {
             font-family: Arial, sans-serif;
         }
+
+        .columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 5px;
+        text-align: center;
+        }
+
+        ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        li {
+            padding: 5px 5px;
+            margin-bottom: 5px;
+        }
+
+        .circle {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .circle li {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3.1px 3.1px;
+        }
+
         form {
             max-width: 400px;
             margin: 0 auto;
@@ -15,19 +47,23 @@
             border-radius: 5px;
             background-color: #f9f9f9;
         }
+
         div {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
         }
+
         input, textarea, select {
             width: 100%;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
         button {
             padding: 10px 15px;
             background-color: #007bff;
@@ -36,8 +72,37 @@
             border-radius: 4px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #0056b3;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .close {
+            color: red;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            float: right;
         }
     </style>
 </head>
@@ -55,12 +120,15 @@
     </div>
     <div>
         <label for="category">Category:</label>
-        <select id="category" name="category">
-            <option value="" disabled selected>Select a category</option>
-            <option th:each="category : ${categories}"
-                    th:value="${category}"
-                    th:text="${category.displayName}"></option>
-        </select>
+        <div style="display: flex; align-items: center;">
+            <select id="category" name="category">
+                <option value="" disabled selected>Select a category</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category}"
+                        th:text="${category.displayName}"></option>
+            </select>
+            <button type="button" id="statsButton" style="margin-left: 10px;">View Stats</button>
+        </div>
     </div>
     <div>
         <label for="date">Date:</label>
@@ -69,5 +137,55 @@
     <button type="submit">Create News</button>
 </form>
 
+
+<div id="statsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Category Statistics</h2>
+        <div class="columns">
+            <ul class="categories">
+                <li th:each="entry : ${countOfCategoryNews}" th:text="${entry.key.displayName}"></li>
+            </ul>
+            <ul class="counts">
+                <li th:each="entry : ${countOfCategoryNews}" th:text="${entry.value}"></li>
+            </ul>
+            <ul class="circle">
+                <li th:each="entry : ${newsCategoryStatus}" th:switch="${entry.value}">
+                    <span th:case="'no'">⚪</span>
+                    <span th:case="'low'">🔴</span>
+                    <span th:case="'medium'">🟡</span>
+                    <span th:case="'high'">🟢</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script>
+    const statsButton = document.getElementById('statsButton');
+    const statsModal = document.getElementById('statsModal');
+    const closeModal = document.getElementById('closeModal');
+
+    statsButton.addEventListener('click', () => {
+        statsModal.style.display = 'flex';
+    });
+
+    closeModal.addEventListener('click', () => {
+        statsModal.style.display = 'none';
+    });
+
+
+    window.addEventListener('click', (event) => {
+        if (event.target === statsModal) {
+            statsModal.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>
