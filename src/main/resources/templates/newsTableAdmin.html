@@ -160,29 +160,107 @@
     function editNews(button) {
         const row = button.closest('tr');
         row.querySelectorAll('td').forEach((cell, index) => {
-            if (index > 0 && index < 5 && !cell.querySelector('input')) {
+
+            if (index > 0 && index < 5 && index !== 3 && !cell.querySelector('input')) {
                 const text = cell.innerText.trim();
                 cell.innerHTML = `<input type="text" class="form-control" value="${text}">`;
             }
         });
     }
 
+
     function saveNews(button) {
         const row = button.closest('tr');
-        row.querySelectorAll('td').forEach((cell, index) => {
-            if (cell.querySelector('input')) {
-                const input = cell.querySelector('input');
-                cell.innerHTML = input.value;
+        const id = row.querySelector('td:nth-child(1)').innerText.trim();
+        const title = row.querySelector('td:nth-child(2) input')?.value || row.querySelector('td:nth-child(2)').innerText.trim();
+        const content = row.querySelector('td:nth-child(3) input')?.value || row.querySelector('td:nth-child(3)').innerText.trim();
+
+        const categoryCell = row.querySelector('td:nth-child(4)');
+        const category = categoryCell ? categoryCell.innerText.trim() : '';
+
+        console.log('Category cell content:', category);
+
+        if (!category) {
+            console.error('Category is empty');
+            alert('Category is empty. Please select a valid category.');
+            return;
+        }
+
+        const categoryMapping = {
+            'Спорт': 'SPORTS',
+            'Політика': 'POLITICS',
+            'Технології': 'TECHNOLOGY',
+            'Здоров\'я': 'HEALTH',
+            'Розваги': 'ENTERTAINMENT',
+            'Бізнес': 'BUSINESS',
+            'Наука': 'SCIENCE'
+        };
+
+        // Конвертація категорії
+        const enumCategory = categoryMapping[category];
+
+        if (!enumCategory) {
+            console.error('Invalid category:', category);
+            alert('Invalid category: ' + category);
+            return;
+        }
+
+        // Зчитуємо дату з поля вводу
+        const date = row.querySelector('td:nth-child(5) input')?.value || row.querySelector('td:nth-child(5)').innerText.trim();
+
+        // Формування об'єкта для відправки
+        const updatedNews = { title, content, category: enumCategory, date };
+
+        console.log("Sending data:", JSON.stringify(updatedNews));
+
+        // Виконання PUT-запиту
+        fetch(`/api/v1/news/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedNews)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
             }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Update successful:', data);
+            alert('News updated successfully!');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error updating news: ' + error.message);
         });
-        alert('Changes saved!');
     }
 
     function deleteNews(button) {
-        const row = button.closest('tr');
-        row.remove();
+    const row = button.closest('tr');
+    const id = row.querySelector('td:nth-child(1)').innerText.trim();
+
+    fetch(`/api/v1/news/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Error: ${response.status}`);
+        }
         alert('News deleted.');
-    }
+        row.remove();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error deleting news: ' + error.message);
+    });
+}
+
 </script>
 </body>
 </html>

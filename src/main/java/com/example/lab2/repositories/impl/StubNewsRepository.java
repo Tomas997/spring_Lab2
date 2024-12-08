@@ -3,6 +3,7 @@ package com.example.lab2.repositories.impl;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 import com.example.lab2.repositories.NewsRepository;
+import com.example.lab2.services.NewsNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -104,20 +105,25 @@ public class StubNewsRepository implements NewsRepository {
     // Новий метод для оновлення новини
     @Override
     public Optional<News> updateNews(Long id, News updatedNews) {
+        System.out.println("Attempting to update news with ID: " + id);
         Optional<News> existingNews = newsList.stream()
                 .filter(news -> news.getId().equals(id))
                 .findFirst();
 
         if (existingNews.isPresent()) {
+            System.out.println("News found. Updating...");
             News news = existingNews.get();
             news.setTitle(updatedNews.getTitle());
             news.setContent(updatedNews.getContent());
             news.setCategory(updatedNews.getCategory());
             news.setDate(updatedNews.getDate());
             return Optional.of(news);
+        } else {
+            System.out.println("News with ID " + id + " not found.");
+            return Optional.empty();
         }
-        return Optional.empty();
     }
+
 
     // Новий метод для видалення новини за ID
     @Override

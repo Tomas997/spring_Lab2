@@ -103,6 +103,7 @@ public class NewsServiceImpl implements NewsService {
         return updated.get();
     }
 
+
     @Override
     public void deleteNews(Long id) {
         boolean removed = newsRepository.deleteNewsById(id);

@@ -1,6 +1,7 @@
 package com.example.lab2.controllers;
 
 import com.example.lab2.models.News;
+import com.example.lab2.models.NewsCategory;
 import com.example.lab2.services.NewsNotFoundException;
 import com.example.lab2.services.NewsService;
 import lombok.AllArgsConstructor;
@@ -39,9 +40,17 @@ public class NewsController {
 
     @PutMapping("/{id}")
     public ResponseEntity<News> updateNews(@PathVariable Long id, @RequestBody News updatedNews) {
-        updatedNews = newsService.updateNews(id, updatedNews);
-        return ResponseEntity.ok(updatedNews);
+        try {
+            NewsCategory category = NewsCategory.fromDisplayName(updatedNews.getCategory().getDisplayName());
+            updatedNews.setCategory(category);
+
+            News news = newsService.updateNews(id, updatedNews);
+            return ResponseEntity.ok(news);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
