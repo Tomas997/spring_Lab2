@@ -23,24 +23,44 @@ public class UserController {
     private static final String NEWS_TABLE = "newsTable";
 
     @GetMapping("/news")
-    public String getAllNews(Model model) {
-        Optional<List<News>> newsListOpt = newsService.getAllNews();
-        model.addAttribute(NEWS_LIST, newsListOpt.orElse(List.of()));
+    public String getAllNews(@RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "size", defaultValue = "5") int size,
+                             Model model) {
+            Optional<List<News>> newsPage = newsService.getNewsWithPaginationAndFiltering(null, null, page, size);
+            long totalNews = newsService.getAllNews().map(List::size).orElse(0);
+            model.addAttribute("newsList", newsPage.orElse(List.of()));
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", (int) Math.ceil((double) totalNews / size));
         return NEWS_TABLE;
     }
 
     @GetMapping("/news/category")
-    public String getNewsByCategory(@RequestParam("category") NewsCategory category, Model model) {
-        Optional<List<News>> newsListOpt = newsService.getAllNewsByCategory(category);
-        model.addAttribute(NEWS_LIST, newsListOpt.orElse(List.of()));
+    public String getNewsByCategory(@RequestParam(value = "page", defaultValue = "0") int page,
+                                    @RequestParam(value = "size", defaultValue = "5") int size,
+                                    @RequestParam("category") NewsCategory category, Model model) {
+        Optional<List<News>> newsPage = newsService.getNewsWithPaginationAndFiltering(null, category, page, size);
+        long totalNews = newsService.getNewsWithPaginationAndFiltering(null, category, 0, Integer.MAX_VALUE)
+                .map(List::size)
+                .orElse(0);
+        model.addAttribute(NEWS_LIST, newsPage.orElse(List.of()));
         model.addAttribute("category", String.valueOf(category));
+        model.addAttribute("totalPages", (int) Math.ceil((double) totalNews / size));
+        model.addAttribute("currentPage", page);
         return NEWS_TABLE;
     }
 
     @GetMapping("/news/search")
-    public String searchNews(@RequestParam("keyword") String keyword, Model model) {
-        Optional<List<News>> newsListOpt = newsService.getAllNewsByWord(keyword);
-        model.addAttribute(NEWS_LIST, newsListOpt.orElse(List.of()));
+    public String searchNews(@RequestParam(value = "page", defaultValue = "0") int page,
+                             @RequestParam(value = "size", defaultValue = "5") int size,
+                             @RequestParam("keyword") String keyword, Model model) {
+        Optional<List<News>> newsPage = newsService.getNewsWithPaginationAndFiltering(keyword, null, page, size);
+        long totalNews = newsService.getNewsWithPaginationAndFiltering(keyword, null, 0, Integer.MAX_VALUE)
+                .map(List::size)
+                .orElse(0);
+        model.addAttribute(NEWS_LIST, newsPage.orElse(List.of()));
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("totalPages", (int) Math.ceil((double) totalNews / size));
+        model.addAttribute("currentPage", page);
         return NEWS_TABLE;
     }
 }

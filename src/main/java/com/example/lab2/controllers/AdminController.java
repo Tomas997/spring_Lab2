@@ -34,13 +34,6 @@ public class AdminController {
         return "newsForm";
     }
 
-    @GetMapping("/news_table_admin")
-    public String getNewsTableAdmin(Model model) {
-        Optional<List<News>> newsListOpt = newsService.getAllNews();
-        model.addAttribute("newsList", newsListOpt.orElse(List.of()));
-        return "newsTableAdmin";
-    }
-
     @PostMapping("/create_news")
     public String createNews(
             @RequestParam("title") String title,

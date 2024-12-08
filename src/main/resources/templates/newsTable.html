@@ -66,30 +66,14 @@
     </div>
 
     <div class="btn-group btn-group-justified d-flex mb-3" role="group">
-        <a href="/user/news"
-           class="btn flex-fill"
-           th:classappend="${category == null} ? 'btn-primary' : 'btn-secondary'">All</a>
-        <a href="/user/news/category?category=SPORTS"
-           class="btn flex-fill"
-           th:classappend="${category == 'SPORTS'} ? 'btn-primary' : 'btn-secondary'">Sports</a>
-        <a href="/user/news/category?category=POLITICS"
-           class="btn flex-fill"
-           th:classappend="${category == 'POLITICS'} ? 'btn-primary' : 'btn-secondary'">Politics</a>
-        <a href="/user/news/category?category=TECHNOLOGY"
-           class="btn flex-fill"
-           th:classappend="${category == 'TECHNOLOGY'} ? 'btn-primary' : 'btn-secondary'">Technology</a>
-        <a href="/user/news/category?category=HEALTH"
-           class="btn flex-fill"
-           th:classappend="${category == 'HEALTH'} ? 'btn-primary' : 'btn-secondary'">Health</a>
-        <a href="/user/news/category?category=ENTERTAINMENT"
-           class="btn flex-fill"
-           th:classappend="${category == 'ENTERTAINMENT'} ? 'btn-primary' : 'btn-secondary'">Entertainment</a>
-        <a href="/user/news/category?category=BUSINESS"
-           class="btn flex-fill"
-           th:classappend="${category == 'BUSINESS'} ? 'btn-primary' : 'btn-secondary'">Business</a>
-        <a href="/user/news/category?category=SCIENCE"
-           class="btn flex-fill"
-           th:classappend="${category == 'SCIENCE'} ? 'btn-primary' : 'btn-secondary'">Science</a>
+        <a href="/user/news" class="btn flex-fill" th:classappend="${category == null} ? 'btn-primary' : 'btn-secondary'">All</a>
+        <a href="/user/news/category?category=SPORTS" class="btn flex-fill" th:classappend="${category == 'SPORTS'} ? 'btn-primary' : 'btn-secondary'">Sports</a>
+        <a href="/user/news/category?category=POLITICS" class="btn flex-fill" th:classappend="${category == 'POLITICS'} ? 'btn-primary' : 'btn-secondary'">Politics</a>
+        <a href="/user/news/category?category=TECHNOLOGY" class="btn flex-fill" th:classappend="${category == 'TECHNOLOGY'} ? 'btn-primary' : 'btn-secondary'">Technology</a>
+        <a href="/user/news/category?category=HEALTH" class="btn flex-fill" th:classappend="${category == 'HEALTH'} ? 'btn-primary' : 'btn-secondary'">Health</a>
+        <a href="/user/news/category?category=ENTERTAINMENT" class="btn flex-fill" th:classappend="${category == 'ENTERTAINMENT'} ? 'btn-primary' : 'btn-secondary'">Entertainment</a>
+        <a href="/user/news/category?category=BUSINESS" class="btn flex-fill" th:classappend="${category == 'BUSINESS'} ? 'btn-primary' : 'btn-secondary'">Business</a>
+        <a href="/user/news/category?category=SCIENCE" class="btn flex-fill" th:classappend="${category == 'SCIENCE'} ? 'btn-primary' : 'btn-secondary'">Science</a>
     </div>
 
     <div style="min-height: 200px;">
@@ -119,6 +103,22 @@
     </div>
 
 </div>
+
+<!-- Пагінація -->
+<nav th:if="${!#lists.isEmpty(newsList)}">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link" th:href="@{/user/news(page=${currentPage - 1}, size=5)}">Previous</a>
+        </li>
+        <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+            th:classappend="${i == currentPage} ? 'active'">
+            <a class="page-link" th:href="@{/user/news(page=${i}, size=5)}" th:text="${i + 1}">1</a>
+        </li>
+        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+            <a class="page-link" th:href="@{/user/news(page=${currentPage + 1}, size=5)}">Next</a>
+        </li>
+    </ul>
+</nav>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {

@@ -72,10 +72,13 @@
     <!-- Заголовок і форма пошуку -->
     <div class="d-flex justify-content-between align-items-center mb-4 mt-2">
         <h1>News List</h1>
-        <form action="/admin/news/search" method="get" class="form-inline">
-            <input type="text" name="keyword" class="form-control mr-2" placeholder="Enter keyword" required>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
+        <div class="d-flex align-items-center gap-4">
+            <form action="/admin/news/search" method="get" class="form-inline me-2">
+                <input type="text" name="keyword" class="form-control me-2" placeholder="Enter keyword" required>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+            <a href="/admin/create_news"><button class="btn btn-success">Create news</button></a>
+        </div>
     </div>
 
     <!-- Кнопки категорій -->
