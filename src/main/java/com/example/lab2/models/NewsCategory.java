@@ -18,4 +18,13 @@ public enum NewsCategory {
     public String getDisplayName() {
         return displayName;
     }
+
+    public static NewsCategory fromDisplayName(String displayName) {
+        for (NewsCategory category : values()) {
+            if (category.getDisplayName().equalsIgnoreCase(displayName)) {
+                return category;
+            }
+        }
+        throw new IllegalArgumentException("Invalid category name: " + displayName);
+    }
 }
