@@ -17,17 +17,12 @@ public interface NewsService {
 
     Optional<List<News>> getAllNewsByCategory(NewsCategory category);
 
-    Map<NewsCategory, Integer> getNewsCountByCategory();
-
-    Map<NewsCategory, String> getNewsCategoryStatus();
-
     News createNews(NewsDto news);
 
     News updateNews(Long id, NewsDto updatedNews);
 
     void deleteNews(Long id);
 
-    Optional<List<News>> getNewsWithPaginationAndFiltering(String keywords, NewsCategory category, int page, int size);
-
-    void deleteAllNewsByCategory(NewsCategory category);
+    void deleteAllNewsByCategory(int id);
 }
+
