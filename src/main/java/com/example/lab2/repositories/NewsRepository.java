@@ -1,6 +1,7 @@
 package com.example.lab2.repositories;
 
 
+import com.example.lab2.dto.NewsDto;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 
@@ -17,9 +18,9 @@ public interface NewsRepository {
 
     Map<NewsCategory, Integer> getNewsCountByCategory();
 
-    News createNews(News news);
+    News createNews(NewsDto news);
 
     boolean deleteNewsById(Long id);
 
-    Optional<News> updateNews(Long id, News updatedNews);
+    Optional<News> updateNews(Long id, NewsDto updatedNews);
 }

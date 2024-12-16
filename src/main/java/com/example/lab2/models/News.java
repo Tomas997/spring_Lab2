@@ -16,6 +16,4 @@ public class News {
     private String content;
     private NewsCategory category;
     private LocalDate date;
-
-
 }

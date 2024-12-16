@@ -1,6 +1,7 @@
 package com.example.lab2.services.impl;
 
 
+import com.example.lab2.dto.NewsDto;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 import com.example.lab2.repositories.NewsRepository;
@@ -8,6 +9,7 @@ import com.example.lab2.services.NewsNotFoundException;
 import com.example.lab2.services.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,7 +38,7 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Override
-    public News createNews(News news) {
+    public News createNews(NewsDto news) {
         return newsRepository.createNews(news);
     }
 
@@ -44,7 +46,9 @@ public class NewsServiceImpl implements NewsService {
     public Optional<List<News>> getAllNews() {
         return newsRepository.getAllNews();
     }
+
     @Override
+    @Transactional(readOnly = true)
     public Optional<News> getNewsById(Long id) {
         return newsRepository.getAllNews()
                 .orElse(Collections.emptyList())
@@ -54,6 +58,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Map<NewsCategory, String> getNewsCategoryStatus() {
         // Отримуємо список новин
         List<News> newsList = newsRepository.getAllNews()
@@ -95,7 +100,8 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public News updateNews(Long id, News updatedNews) {
+    @Transactional
+    public News updateNews(Long id, NewsDto updatedNews) {
         Optional<News> updated = newsRepository.updateNews(id, updatedNews);
         if (updated.isEmpty()) {
             throw new NewsNotFoundException(id);
@@ -132,5 +138,16 @@ public class NewsServiceImpl implements NewsService {
         });
     }
 
+    @Override
+    @Transactional
+    public void deleteAllNewsByCategory(NewsCategory category) {
+        Optional<List<News>> newsToDelete = newsRepository.getAllNewsByCategory(category);
+
+        if (!newsToDelete.isEmpty()) {
+            for (News news : newsToDelete.get()) {
+                newsRepository.deleteNewsById(news.getId());
+            }
+        }
+    }
 }
 
