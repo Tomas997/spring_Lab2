@@ -1,15 +1,23 @@
 package com.example.lab2.controllers;
 
+import com.example.lab2.dto.NewsDto;
+import com.example.lab2.dto.exception.MyValidationException;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 import com.example.lab2.services.NewsNotFoundException;
 import com.example.lab2.services.NewsService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.FieldError;
+
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/news")
@@ -19,10 +27,21 @@ public class NewsController {
     private final NewsService newsService;
 
     @PostMapping
-    public ResponseEntity<News> createNews(@RequestBody News news) {
+    public ResponseEntity<News> createNews(@RequestBody @Valid NewsDto news, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(
+                            FieldError::getField,
+                            FieldError::getDefaultMessage
+                    ));
+
+            throw new MyValidationException(errors);
+        }
         News newsCreated = newsService.createNews(news);
         return ResponseEntity.status(HttpStatus.CREATED).body(newsCreated);
     }
+
 
     @GetMapping
     public ResponseEntity<List<News>> getAllNews() {
@@ -39,7 +58,7 @@ public class NewsController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<News> updateNews(@PathVariable Long id, @RequestBody News updatedNews) {
+    public ResponseEntity<News> updateNews(@PathVariable Long id, @RequestBody @Valid NewsDto updatedNews) {
         try {
             NewsCategory category = NewsCategory.fromDisplayName(updatedNews.getCategory().getDisplayName());
             updatedNews.setCategory(category);
@@ -51,10 +70,15 @@ public class NewsController {
         }
     }
 
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteNews(@PathVariable Long id) {
         newsService.deleteNews(id);
+    }
+
+    @DeleteMapping()
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAllNewsByCategory(@RequestBody NewsCategory category) {
+        newsService.deleteAllNewsByCategory(category);
     }
 }

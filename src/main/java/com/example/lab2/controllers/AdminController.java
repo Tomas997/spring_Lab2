@@ -1,5 +1,6 @@
 package com.example.lab2.controllers;
 
+import com.example.lab2.dto.NewsDto;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 import com.example.lab2.services.NewsService;
@@ -44,7 +45,7 @@ public class AdminController {
         String safeTitle = StringEscapeUtils.escapeHtml4(title);        //Фільтрація символів: скрипти видаляються з полів, наприклад, бібліотеку Apache Commons Lang
         String safeContent = StringEscapeUtils.escapeHtml4(content);
 
-        News news = News.builder()
+        NewsDto news = NewsDto.builder()
                 .title(safeTitle)
                 .content(safeContent)
                 .category(category)

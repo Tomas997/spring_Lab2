@@ -1,9 +1,9 @@
 package com.example.lab2.repositories.impl;
 
+import com.example.lab2.dto.NewsDto;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 import com.example.lab2.repositories.NewsRepository;
-import com.example.lab2.services.NewsNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -94,17 +94,23 @@ public class StubNewsRepository implements NewsRepository {
 
 
     @Override
-    public News createNews(News news) {
-        news.setId(nextId);
+    public News createNews(NewsDto news) {
+        News newsCreate = News.builder()
+                .id(nextId)
+                .title(news.getTitle())
+                .content(news.getContent())
+                .date(news.getDate())
+                .category(news.getCategory())
+                .build();
         nextId++;
-        newsList.add(news);
-        return news;
+        newsList.add(newsCreate);
+        return newsCreate;
     }
 
 
     // Новий метод для оновлення новини
     @Override
-    public Optional<News> updateNews(Long id, News updatedNews) {
+    public Optional<News> updateNews(Long id, NewsDto updatedNews) {
         System.out.println("Attempting to update news with ID: " + id);
         Optional<News> existingNews = newsList.stream()
                 .filter(news -> news.getId().equals(id))
