@@ -1,5 +1,6 @@
 package com.example.lab2.services;
 
+import com.example.lab2.dto.NewsDto;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 
@@ -20,9 +21,9 @@ public interface NewsService {
 
     Map<NewsCategory, String> getNewsCategoryStatus();
 
-    News createNews(News news);
+    News createNews(NewsDto news);
 
-    News updateNews(Long id, News updatedNews);
+    News updateNews(Long id, NewsDto updatedNews);
 
     void deleteNews(Long id);
 

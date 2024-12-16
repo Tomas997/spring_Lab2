@@ -1,6 +1,7 @@
 package com.example.lab2.services.impl;
 
 
+import com.example.lab2.dto.NewsDto;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
 import com.example.lab2.repositories.NewsRepository;
@@ -37,7 +38,7 @@ public class NewsServiceImpl implements NewsService {
 
 
     @Override
-    public News createNews(News news) {
+    public News createNews(NewsDto news) {
         return newsRepository.createNews(news);
     }
 
@@ -100,7 +101,7 @@ public class NewsServiceImpl implements NewsService {
 
     @Override
     @Transactional
-    public News updateNews(Long id, News updatedNews) {
+    public News updateNews(Long id, NewsDto updatedNews) {
         Optional<News> updated = newsRepository.updateNews(id, updatedNews);
         if (updated.isEmpty()) {
             throw new NewsNotFoundException(id);
