@@ -1,5 +1,6 @@
 package com.example.lab2.repositories.impl;
 
+
 import com.example.lab2.dto.NewsDto;
 import com.example.lab2.models.News;
 import com.example.lab2.models.NewsCategory;
@@ -58,7 +59,9 @@ public class JdbcNewsRepository implements NewsRepository {
     }
 
     @Override
+
     public News createNews(NewsDto news) {
+
         String sql = "INSERT INTO news (title, content, category, date) VALUES (?, ?, ?, ?) RETURNING id";
         Long id = jdbcTemplate.queryForObject(sql, Long.class, news.getTitle(), news.getContent(), news.getCategory().name(), news.getDate());
         News newsResponse = News.builder()
@@ -105,3 +108,4 @@ public class JdbcNewsRepository implements NewsRepository {
         return rowsAffected > 0;
     }
 }
+

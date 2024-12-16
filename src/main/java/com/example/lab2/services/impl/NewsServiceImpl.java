@@ -131,6 +131,7 @@ public class NewsServiceImpl implements NewsService {
                 stream = stream.filter(news -> news.getCategory() == category);
             }
 
+
             return stream
                     .skip((long) page * size)
                     .limit(size)
@@ -150,4 +151,5 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 }
+
 
