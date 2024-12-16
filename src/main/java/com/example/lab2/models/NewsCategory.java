@@ -1,30 +1,30 @@
 package com.example.lab2.models;
 
-public enum NewsCategory {
-    SPORTS("Спорт"),
-    POLITICS("Політика"),
-    TECHNOLOGY("Технології"),
-    HEALTH("Здоров'я"),
-    ENTERTAINMENT("Розваги"),
-    BUSINESS("Бізнес"),
-    SCIENCE("Наука");
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    private final String displayName;
+import java.util.List;
 
-    NewsCategory(String displayName) {
-        this.displayName = displayName;
-    }
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "categories")
+public class NewsCategory {
 
-    public String getDisplayName() {
-        return displayName;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public static NewsCategory fromDisplayName(String displayName) {
-        for (NewsCategory category : values()) {
-            if (category.getDisplayName().equalsIgnoreCase(displayName)) {
-                return category;
-            }
-        }
-        throw new IllegalArgumentException("Invalid category name: " + displayName);
-    }
+    @Column(name = "display_name", nullable = false, unique = true)
+    private String displayName;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "category")
+    @JsonManagedReference
+    List<News> newsList;
 }
