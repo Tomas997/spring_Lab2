@@ -1,7 +1,7 @@
 package com.example.lab2.repositories.impl;
 
-import com.example.lab2.models.News;
-import com.example.lab2.models.NewsCategory;
+import com.example.lab2.entity.News;
+import com.example.lab2.entity.NewsCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

@@ -2,8 +2,8 @@ package com.example.lab2.repositories;
 
 
 import com.example.lab2.dto.NewsDto;
-import com.example.lab2.models.News;
-import com.example.lab2.models.NewsCategory;
+import com.example.lab2.entity.News;
+import com.example.lab2.entity.NewsCategory;
 
 import java.util.List;
 import java.util.Map;

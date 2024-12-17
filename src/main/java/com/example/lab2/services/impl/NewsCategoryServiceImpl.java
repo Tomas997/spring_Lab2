@@ -1,10 +1,10 @@
 package com.example.lab2.services.impl;
 
 import com.example.lab2.dto.category.NewsCategoryDto;
-import com.example.lab2.models.NewsCategory;
+import com.example.lab2.entity.NewsCategory;
 import com.example.lab2.repositories.impl.NewsCategoryRepository;
-import com.example.lab2.services.NewsCategoryNotFoundException;
 import com.example.lab2.services.NewsCategoryService;
+import com.example.lab2.services.exeption.NewsCategoryNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

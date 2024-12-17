@@ -13,3 +13,4 @@ public class NewsCategoryResponseDto {
     private Long id;
     private String displayName;
 }
+

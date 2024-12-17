@@ -1,7 +1,8 @@
 package com.example.lab2.controllers.exception;
 
 import com.example.lab2.dto.exception.MyValidationException;
-import com.example.lab2.services.NewsNotFoundException;
+import com.example.lab2.services.exeption.NewsCategoryNotFoundException;
+import com.example.lab2.services.exeption.NewsNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,14 @@ public class GlobalExceptionalHandler extends ResponseEntityExceptionHandler {
         ProblemDetail problemDetail = forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problemDetail.setType(URI.create("news-not-found"));
         problemDetail.setTitle("News Not Found");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(NewsCategoryNotFoundException.class)
+    public ProblemDetail handleNewsCategoryNotFoundException(NewsCategoryNotFoundException ex) {
+        ProblemDetail problemDetail = forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setType(URI.create("category-not-found"));
+        problemDetail.setTitle("Category Not Found");
         return problemDetail;
     }
 

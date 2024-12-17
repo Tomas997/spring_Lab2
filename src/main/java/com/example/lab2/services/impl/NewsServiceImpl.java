@@ -2,19 +2,16 @@ package com.example.lab2.services.impl;
 
 
 import com.example.lab2.dto.NewsDto;
-import com.example.lab2.models.News;
-import com.example.lab2.models.NewsCategory;
-import com.example.lab2.repositories.NewsRepository;
+import com.example.lab2.entity.News;
+import com.example.lab2.entity.NewsCategory;
 import com.example.lab2.repositories.impl.NewsRepositoryImpl;
-import com.example.lab2.services.NewsNotFoundException;
+import com.example.lab2.services.exeption.NewsNotFoundException;
 import com.example.lab2.services.NewsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -89,6 +86,5 @@ public class NewsServiceImpl implements NewsService {
         newsRepository.deleteAll(newsToDelete);
     }
 }
-
 
 

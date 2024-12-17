@@ -1,6 +1,5 @@
 package com.example.lab2.dto;
 
-import com.example.lab2.models.NewsCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -27,7 +26,7 @@ public class NewsDto {
     private String content;
 
     @NotNull(message = "Category is required")
-    private NewsCategory category;
+    private int categoryId;
 
     @NotNull(message = "Date is required")
     @PastOrPresent(message = "Date cannot be in the future")

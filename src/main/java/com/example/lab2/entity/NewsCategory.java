@@ -1,4 +1,4 @@
-package com.example.lab2.models;
+package com.example.lab2.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
