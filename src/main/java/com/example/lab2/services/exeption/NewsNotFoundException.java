@@ -1,4 +1,4 @@
-package com.example.lab2.services;
+package com.example.lab2.services.exeption;
 
 
 public class NewsNotFoundException extends RuntimeException {

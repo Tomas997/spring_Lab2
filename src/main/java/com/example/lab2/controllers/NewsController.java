@@ -2,9 +2,9 @@ package com.example.lab2.controllers;
 
 import com.example.lab2.dto.NewsDto;
 import com.example.lab2.dto.exception.MyValidationException;
-import com.example.lab2.models.News;
-import com.example.lab2.models.NewsCategory;
-import com.example.lab2.services.NewsNotFoundException;
+import com.example.lab2.entity.News;
+import com.example.lab2.services.NewsCategoryService;
+import com.example.lab2.services.exeption.NewsNotFoundException;
 import com.example.lab2.services.NewsService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 public class NewsController {
 
     private final NewsService newsService;
+    private final NewsCategoryService newsCategoryService;
+
 
     @PostMapping
     public ResponseEntity<News> createNews(@RequestBody @Valid NewsDto news, BindingResult bindingResult) {
@@ -60,9 +62,6 @@ public class NewsController {
     @PutMapping("/{id}")
     public ResponseEntity<News> updateNews(@PathVariable Long id, @RequestBody @Valid NewsDto updatedNews) {
         try {
-            NewsCategory category = NewsCategory.fromDisplayName(updatedNews.getCategory().getDisplayName());
-            updatedNews.setCategory(category);
-
             News news = newsService.updateNews(id, updatedNews);
             return ResponseEntity.ok(news);
         } catch (IllegalArgumentException e) {
@@ -76,9 +75,12 @@ public class NewsController {
         newsService.deleteNews(id);
     }
 
-    @DeleteMapping()
+    @DeleteMapping("/category/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteAllNewsByCategory(@RequestBody NewsCategory category) {
-        newsService.deleteAllNewsByCategory(category);
+    public void deleteAllNewsByCategory(@PathVariable int id) {
+        try {
+            newsService.deleteAllNewsByCategory(id);
+        }catch (Exception e) {}
+
     }
 }
